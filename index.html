@@ -1,0 +1,697 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d18">
+  <title>Lenior Programador | Samuel Tech IA</title>
+
+  <style>
+    :root {
+      --bg: #080d18;
+      --panel: #101827;
+      --panel2: #172235;
+      --border: #26364c;
+      --text: #edf4ff;
+      --muted: #9aabc2;
+      --green: #00e6a0;
+      --blue: #42a5ff;
+      --danger: #ff6878;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, Arial, sans-serif;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    button, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .app {
+      display: grid;
+      grid-template-columns: 255px minmax(0, 1fr);
+      height: 100dvh;
+    }
+
+    aside {
+      background: #0b1220;
+      border-right: 1px solid var(--border);
+      padding: 22px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 45px;
+      height: 45px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #00170f;
+      font-size: 22px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      box-shadow: 0 0 25px #00e6a025;
+    }
+
+    .brand h1 { font-size: 19px; margin: 0; }
+    .brand p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+
+    .new-chat, .side-link {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      text-align: left;
+    }
+
+    .new-chat:hover, .side-link:hover {
+      border-color: var(--green);
+    }
+
+    .section-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin: 0 0 10px;
+    }
+
+    .side-link {
+      display: block;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    .side-bottom {
+      margin-top: auto;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+    }
+
+    header {
+      height: 70px;
+      flex-shrink: 0;
+      padding: 0 25px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title { font-weight: 700; }
+    .status {
+      color: var(--green);
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .status::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      margin-right: 7px;
+    }
+
+    .model-label {
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 8px 12px;
+    }
+
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 18px;
+      scroll-behavior: smooth;
+    }
+
+    .welcome {
+      max-width: 720px;
+      margin: 9vh auto 25px;
+      text-align: center;
+    }
+
+    .welcome-icon {
+      width: 75px;
+      height: 75px;
+      margin: auto auto 22px;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      font-size: 35px;
+      background: linear-gradient(135deg, #00e6a027, #42a5ff27);
+      border: 1px solid #00e6a045;
+    }
+
+    .welcome h2 {
+      font-size: clamp(25px, 4vw, 38px);
+      margin: 0 0 12px;
+    }
+
+    .gradient {
+      background: linear-gradient(90deg, var(--green), var(--blue));
+      color: transparent;
+      background-clip: text;
+    }
+
+    .welcome > p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .suggestions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .suggestion {
+      text-align: left;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 15px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .suggestion:hover {
+      border-color: var(--green);
+      background: var(--panel2);
+    }
+
+    .suggestion strong { display: block; margin-bottom: 5px; }
+    .suggestion small { color: var(--muted); }
+
+    .message {
+      max-width: 850px;
+      margin: 0 auto 25px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .avatar {
+      width: 35px;
+      height: 35px;
+      flex-shrink: 0;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .message.assistant .avatar {
+      color: var(--green);
+      border-color: #00e6a040;
+    }
+
+    .message-body {
+      min-width: 0;
+      flex: 1;
+      line-height: 1.75;
+      overflow-wrap: anywhere;
+    }
+
+    .message-role {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    .message-body pre {
+      white-space: pre;
+      overflow-x: auto;
+      background: #070b12;
+      border: 1px solid var(--border);
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .message-body code {
+      font-family: Consolas, Monaco, monospace;
+    }
+
+    .message-body :not(pre) > code {
+      background: #1b293d;
+      border-radius: 5px;
+      padding: 2px 5px;
+    }
+
+    .code-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin: -5px 0 8px;
+    }
+
+    .copy-btn {
+      background: var(--panel2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 7px;
+      font-size: 12px;
+    }
+
+    .composer-area {
+      padding: 12px 18px 20px;
+      background: linear-gradient(transparent, var(--bg) 18%);
+    }
+
+    .composer {
+      max-width: 850px;
+      margin: auto;
+      padding: 12px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      transition: border-color .2s;
+    }
+
+    .composer:focus-within { border-color: #00e6a080; }
+
+    textarea {
+      width: 100%;
+      resize: none;
+      max-height: 180px;
+      min-height: 48px;
+      background: transparent;
+      border: 0;
+      outline: none;
+      color: var(--text);
+      padding: 8px;
+      line-height: 1.6;
+    }
+
+    textarea::placeholder { color: #71839d; }
+
+    .composer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 3px 0;
+    }
+
+    .hint { font-size: 11px; color: var(--muted); }
+
+    .send {
+      background: linear-gradient(135deg, var(--green), #48c6ff);
+      color: #05111a;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 800;
+    }
+
+    .send:disabled { opacity: .5; cursor: wait; }
+
+    .clear-btn {
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .error {
+      color: var(--danger);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .typing { color: var(--muted); font-size: 13px; }
+
+    @media (max-width: 720px) {
+      .app { grid-template-columns: 1fr; }
+      aside { display: none; }
+      header { height: 62px; padding: 0 14px; }
+      #messages { padding: 20px 12px; }
+      .welcome { margin-top: 6vh; }
+      .suggestions { grid-template-columns: 1fr; }
+      .composer-area { padding: 8px 10px 12px; }
+      .model-label { font-size: 10px; }
+      .hint { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+
+  <aside>
+    <div class="brand">
+      <div class="logo">L</div>
+      <div>
+        <h1>Lenior</h1>
+        <p>Samuel Tech IA</p>
+      </div>
+    </div>
+
+    <button class="new-chat" id="newChat">＋ Nova conversa</button>
+
+    <section>
+      <p class="section-label">Seu assistente</p>
+      <div class="side-link">⌘ Programação</div>
+      <div class="side-link">⌘ Correção de bugs</div>
+      <div class="side-link">⌘ Criação de projetos</div>
+      <div class="side-link">⌘ APIs e backends</div>
+    </section>
+
+    <div class="side-bottom">
+      <strong>LENIOR PROGRAMADOR</strong><br>
+      Inteligência artificial para desenvolver suas ideias.<br><br>
+      Samuel Tech IA © 2026
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <div>
+        <div class="header-title">Lenior Programador</div>
+        <div class="status" id="status">Assistente pronto</div>
+      </div>
+      <div class="model-label">AI · Developer</div>
+    </header>
+
+    <div id="messages" aria-live="polite">
+      <section class="welcome" id="welcome">
+        <div class="welcome-icon">⌘</div>
+        <h2>O que vamos <span class="gradient">programar hoje?</span></h2>
+        <p>
+          Crie projetos, gere código, corrija erros e explore
+          novas tecnologias com o Lenior.
+        </p>
+
+        <div class="suggestions">
+          <button class="suggestion" data-prompt="Crie uma API REST completa em Node.js com Express, validação e tratamento de erros.">
+            <strong>⌘ Criar uma API</strong>
+            <small>Backend com Node.js e Express</small>
+          </button>
+
+          <button class="suggestion" data-prompt="Crie um site moderno, responsivo, com HTML, CSS e JavaScript. Entregue o código completo.">
+            <strong>▣ Criar um site</strong>
+            <small>Frontend moderno e responsivo</small>
+          </button>
+
+          <button class="suggestion" data-prompt="Explique como encontrar e corrigir bugs em um projeto. Dê um exemplo prático.">
+            <strong>⚡ Corrigir erros</strong>
+            <small>Investigar bugs e suas causas</small>
+          </button>
+
+          <button class="suggestion" data-prompt="Monte a estrutura de um projeto profissional com pastas, arquivos, dependências e instruções de execução.">
+            <strong>◇ Criar um projeto</strong>
+            <small>Arquitetura e arquivos completos</small>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <div class="composer-area">
+      <form id="chatForm" class="composer">
+        <textarea id="messageInput" rows="2"
+          placeholder="Descreva o que você quer programar..."
+          aria-label="Mensagem para o Lenior"
+          maxlength="20000" required></textarea>
+
+        <div class="composer-bottom">
+          <span class="hint">Enter envia · Shift + Enter quebra a linha</span>
+          <button class="send" id="sendBtn" type="submit">Enviar ↑</button>
+        </div>
+        <div id="error" class="error" hidden></div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script>
+  const API_URL =
+    "https://programador-api-2lnr.onrender.com/chat";
+
+  const messagesEl = document.getElementById("messages");
+  const welcomeEl = document.getElementById("welcome");
+  const input = document.getElementById("messageInput");
+  const form = document.getElementById("chatForm");
+  const sendBtn = document.getElementById("sendBtn");
+  const statusEl = document.getElementById("status");
+  const errorEl = document.getElementById("error");
+
+  // Histórico mantido na memória desta página.
+  const history = [];
+  let busy = false;
+
+  function scrollBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function addMessage(role, text) {
+    if (welcomeEl) welcomeEl.hidden = true;
+
+    const wrapper = document.createElement("article");
+    wrapper.className = "message " + role;
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar";
+    avatar.textContent = role === "user" ? "Você" : "L";
+
+    const body = document.createElement("div");
+    body.className = "message-body";
+
+    const label = document.createElement("div");
+    label.className = "message-role";
+    label.textContent = role === "user" ? "Você" : "Lenior";
+
+    const content = document.createElement("div");
+    content.className = "message-content";
+
+    if (role === "assistant") {
+      renderMarkdown(content, text);
+    } else {
+      content.textContent = text;
+    }
+
+    body.append(label, content);
+    wrapper.append(avatar, body);
+    messagesEl.appendChild(wrapper);
+    scrollBottom();
+
+    return wrapper;
+  }
+
+  // Renderizador simples de Markdown.
+  // Texto comum é sempre inserido como texto, sem executar HTML.
+  function escapeHtml(value) {
+    return value.replace(/[&<>"']/g, char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[char]);
+  }
+
+  function renderMarkdown(container, text) {
+    const codeBlocks = [];
+
+    let safe = escapeHtml(text).replace(
+      /```([a-zA-Z0-9_+-]*)\n?([\s\S]*?)```/g,
+      (_, language, code) => {
+        const index = codeBlocks.length;
+        codeBlocks.push({ language, code });
+        return `%%CODEBLOCK${index}%%`;
+      }
+    );
+
+    safe = safe
+      .replace(/^### (.*)$/gm, "<h3>$1</h3>")
+      .replace(/^## (.*)$/gm, "<h2>$1</h2>")
+      .replace(/^# (.*)$/gm, "<h2>$1</h2>")
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/`([^`\n]+)`/g, "<code>$1</code>")
+      .replace(/\n/g, "<br>");
+
+    safe = safe.replace(
+      /%%CODEBLOCK(\d+)%%/g,
+      (_, number) => {
+        const block = codeBlocks[Number(number)];
+        const code = escapeHtml(block.code);
+        const lang = escapeHtml(block.language || "code");
+
+        return `<div class="code-block">
+          <div class="code-actions">
+            <button type="button" class="copy-btn"
+              data-copy="${number}">Copiar código</button>
+          </div>
+          <pre><code class="language-${lang}">${code}</code></pre>
+        </div>`;
+      }
+    );
+
+    container.innerHTML = safe;
+
+    container.querySelectorAll("[data-copy]").forEach(button => {
+      button.addEventListener("click", async () => {
+        const block = codeBlocks[Number(button.dataset.copy)];
+
+        try {
+          await navigator.clipboard.writeText(block.code);
+          button.textContent = "Copiado!";
+          setTimeout(() => button.textContent = "Copiar código", 1500);
+        } catch {
+          button.textContent = "Falha ao copiar";
+        }
+      });
+    });
+  }
+
+  function setBusy(value) {
+    busy = value;
+    sendBtn.disabled = value;
+    input.disabled = value;
+    sendBtn.textContent = value ? "Aguarde..." : "Enviar ↑";
+    statusEl.textContent = value ? "Lenior está pensando..." : "Assistente pronto";
+  }
+
+  async function askLenior(message) {
+    if (busy || !message.trim()) return;
+
+    errorEl.hidden = true;
+    errorEl.textContent = "";
+    addMessage("user", message);
+    input.value = "";
+    input.style.height = "auto";
+    setBusy(true);
+
+    const loading = addMessage("assistant", "");
+    loading.querySelector(".message-content").innerHTML =
+      '<span class="typing">Lenior está preparando a resposta...</span>';
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mensagem: message,
+          historico: history.slice(-20)
+        })
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.erro || `Erro HTTP ${response.status}`);
+      }
+
+      if (typeof data.resposta !== "string" || !data.resposta.trim()) {
+        throw new Error("A API não retornou uma resposta válida.");
+      }
+
+      loading.querySelector(".message-content").replaceChildren();
+      renderMarkdown(
+        loading.querySelector(".message-content"),
+        data.resposta
+      );
+
+      history.push(
+        { role: "user", text: message },
+        { role: "model", text: data.resposta }
+      );
+
+      // Limita o histórico local para controlar o tamanho do contexto.
+      if (history.length > 20) {
+        history.splice(0, history.length - 20);
+      }
+
+    } catch (error) {
+      loading.remove();
+      errorEl.textContent =
+        "Não foi possível conversar com o Lenior: " + error.message;
+      errorEl.hidden = false;
+    } finally {
+      setBusy(false);
+      input.focus();
+      scrollBottom();
+    }
+  }
+
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    askLenior(input.value);
+  });
+
+  input.addEventListener("keydown", event => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      form.requestSubmit();
+    }
+  });
+
+  input.addEventListener("input", () => {
+    input.style.height = "auto";
+    input.style.height = Math.min(input.scrollHeight, 180) + "px";
+  });
+
+  document.querySelectorAll("[data-prompt]").forEach(button => {
+    button.addEventListener("click", () => {
+      askLenior(button.dataset.prompt);
+    });
+  });
+
+  document.getElementById("newChat").addEventListener("click", () => {
+    if (busy) return;
+
+    history.length = 0;
+    messagesEl.replaceChildren();
+
+    const welcome = document.createElement("section");
+    welcome.className = "welcome";
+    welcome.innerHTML = `
+      <div class="welcome-icon">⌘</div>
+      <h2>Nova conversa com o <span class="gradient">Lenior</span></h2>
+      <p>O que vamos programar agora?</p>
+    `;
+
+    messagesEl.appendChild(welcome);
+    errorEl.hidden = true;
+    input.value = "";
+    input.focus();
+  });
+</script>
+</body>
+</html>
